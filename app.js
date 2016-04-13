@@ -4,6 +4,7 @@ import url from 'url';
 let server = http.createServer(function(req, res) {
 
   let parsedUrl = url.parse(req.url, true);
+  console.log(parsedUrl);
 
   /**
    * Let's create a simple webserver that returns a different
@@ -25,6 +26,14 @@ let server = http.createServer(function(req, res) {
    *    in your browser. At /, you should see the / message. At /other,
    *    you should see the other message.
    */
+    if (parsedUrl.path === "/") {
+      res.write("<h1>You're on the root page!</h1>");
+      res.end();
+    }
+    else if (parsedUrl.path === "/other"){
+      res.write("<h1>You're on the other page!</h1>");
+      res.end();
+    }
 
 });
 

@@ -7,6 +7,9 @@ let proxy = httpProxy.createProxyServer({});
 let server = http.createServer(function(req, res) {
 
     let parsedUrl = url.parse(req.url, true);
+    parsedUrl.query.APPID = '97e2a65458fa6ffa369e9f2c945bd316';
+    parsedUrl.search = null;
+    req.url = url.format(parsedUrl);
 
     /**
      * We want to proxy our requests to Open Weather Map's API,

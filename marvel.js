@@ -1,4 +1,5 @@
 import http from 'http';
+import httpProxy from 'http-proxy';
 import url from 'url';
 import crypto from 'crypto';
 
@@ -7,7 +8,11 @@ let proxy = httpProxy.createProxyServer({});
 let server = http.createServer(function(req, res) {
 
   let parsedUrl = url.parse(req.url, true);
-
+    parsedUrl.query.apikey = "ed7601d2962065f2fc12241cbc32a585";
+    parsedUrl.search = null;
+    let currentTime = (Math.floor(Date.now() / 1000)).toString();
+    // console.log(currentTime);
+    parsedUrl.query.ts = currentTime;
   /**
    * We want to proxy our requests to Marvel's API,
    * but we need to add our API key as a querystring parameter.
@@ -43,9 +48,14 @@ let server = http.createServer(function(req, res) {
    *    in your browser. At /v1/public/characters?name=Falcon you should
    *    see data for Falcon.
    */
-
-   let data = "";
+   let privateKey = "b79766932de2ad0426466a5633994081dfd98a93";
+   let publicKey = "ed7601d2962065f2fc12241cbc32a585";
+   let data = `${currentTime}${privateKey}${publicKey}`;
+  //  console.log(data);
    let hash = crypto.createHash('md5').update(data).digest("hex");
+
+   parsedUrl.query.hash = hash;
+   req.url = url.format(parsedUrl);
 
    proxy.web(req, res, {
      target: 'http://gateway.marvel.com:80'

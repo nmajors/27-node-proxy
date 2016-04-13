@@ -1,12 +1,18 @@
 import http from 'http';
+import https from 'https';
 import httpProxy from 'http-proxy';
 import url from 'url';
 
 let proxy = httpProxy.createProxyServer({});
 
 let server = http.createServer(function(req, res) {
-
+  console.log("wtf");
   let parsedUrl = url.parse(req.url, true);
+  console.log(parsedUrl);
+// api key: T5eNCI1nAOnsWZ3X02aFbDvkdSTzOUsJNDEanRBj
+  parsedUrl.query.api_key = "T5eNCI1nAOnsWZ3X02aFbDvkdSTzOUsJNDEanRBj";
+  parsedUrl.search = null;
+  req.url = url.format(parsedUrl);
 
   /**
    * We want to proxy our requests to NASA's API,
@@ -29,8 +35,8 @@ let server = http.createServer(function(req, res) {
    */
 
    proxy.web(req, res, {
-     target: 'https://api.nasa.gov',
-     agent  : https.globalAgent,
+     target: "https://api.nasa.gov",
+     agent: https.globalAgent,
      headers: {
        host: 'api.nasa.gov'
      }
